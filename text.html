@@ -17,6 +17,7 @@
 <body>
  
         <button data-animal="dog">Dog</button>
+        <button data-animal="cat">Cat</button>
 
         <!-- <button data-animal="cat"></button>       -->
        
@@ -46,22 +47,23 @@
                 // Storing an array of results in the results variable
                 var results = response.data;
 
+              // Looping over every result item
+              for (var i = 0; i < results.length; i++) {
+
                 var animalImage = $("<img>");
 
-                animalImage.attr("src", results[1].images.fixed_height.url);
-                animalImage.attr("alt", "dog image");
+                animalImage.attr("src", results[i].images.fixed_height.url);
+                // animalImage.attr("alt", "dog image");
 
                 $("#gifs-appear-here").prepend(animalImage);
 
-
+                
+                   
       
-                // // Looping over every result item
-                // for (var i = 0; i < results.length; i++) {
-      
-                //   // Only taking action if the photo has an appropriate rating
-                //   if (results[i].rating !== "r" && results[i].rating !== "pg-13") {
-                //     // Creating a div with the class "item"
-                //     var gifDiv = $("<div class='item'>");
+              // Only taking action if the photo has an appropriate rating
+              // if (results[i].rating !== "r" && results[i].rating !== "pg-13") {
+              // Creating a div with the class "item"
+              // var gifDiv = $("<div class='item'>");
       
                 //     // Storing the result item's rating
                 //     var rating = results[i].rating;
@@ -84,6 +86,7 @@
                 //     $("#gifs-appear-here").prepend(gifDiv);
                 //   }
                 // }
+              }
               });
           });
         </script>
