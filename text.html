@@ -50,21 +50,38 @@
       // Constructing a URL to search Giphy for animal
       var queryURL = "https://api.giphy.com/v1/gifs/search?q=" +
       animal + "&api_key=dc6zaTOxFJmzC&limit=10";
-
       console.log(queryURL)
-      
+        
       // Performing our AJAX GET request
       $.ajax({
       url: queryURL,
       method: "GET"
       })
+      
       // After the data comes back from the API
       .then(function(response) {
-        // Storing an array of results in the results variable
-        var results = response.data;
-        // Looping over every result item
-        for (var i = 0; i < results.length; i++) {
-          var animalImage = $("<img>");
+      
+      // Storing an array of results in the results variable
+      var results = response.data;
+      
+      // Looping over every result item
+      for (var i = 0; i < results.length; i++) {
+          
+        if (results[i].rating !== "r") {
+        // Creating a div with the class "item"
+        var gifDiv = $("<div class='item'>");
+
+        // Storing the result item's rating    
+        var rating = results[i].rating;
+
+        // Creating a paragraph tag with the result item's rating
+        var p = $("<p>").text("Rating: " + rating);
+            
+        var animalImage = $("<img>");
+
+        }
+          
+        
           // Return still image
           animalImage.attr("src", results[i].images.fixed_height_still.url);
           animalImage.attr("altSrc", results[i].images.fixed_height_still.url);
@@ -75,17 +92,20 @@
           animalImage.attr("class","imgButton");
 
           // animalImage.attr("alt", "dog image");
+          gifDiv.append(p);
+          // Prepending the gifDiv to the "#gifs-appear-here" div in the HTML
+          $("#gifs-appear-here").prepend(gifDiv);
           $("#gifs-appear-here").prepend(animalImage);             
         }
       });
     });
 
-    $("#gifs-appear-here > img").on("click", function() {
-      console.log("clicking");
-      var imageSwitch = $(this).src;
-      $(this).attr("src",$(this).attr("altSrc"));   
-      $(this).attr("altSrc",imageSwitch);
-    });
+    // $("#gifs-appear-here > img").on("click", function() {
+    //   console.log("clicking");
+    //   var imageSwitch = $(this).src;
+    //   $(this).attr("src",$(this).attr("altSrc"));   
+    //   $(this).attr("altSrc",imageSwitch);
+    // });
 
 
   $(document).on("click",".imgButton", function () {
