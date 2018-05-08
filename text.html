@@ -15,86 +15,97 @@
 </head>
 
 <body>
- 
-        <button data-animal="dog">Dog</button>
-        <button data-animal="cat">Cat</button>
-
-        <!-- <button data-animal="cat"></button>       -->
        
-                   
-        <div id="gifs-appear-here">
-        </div>
-      
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-        <script type="text/javascript">
-          // Event listener for all button elements
-          $("button").on("click", function() {
-            console.log("working!")
-            // In this case, the "this" keyword refers to the button that was clicked
-            var animal = $(this).attr("data-animal");
-      
-            // Constructing a URL to search Giphy for animal
-            var queryURL = "https://api.giphy.com/v1/gifs/search?q=" +
-              animal + "&api_key=dc6zaTOxFJmzC&limit=10";
-      
-            // Performing our AJAX GET request
-            $.ajax({
-              url: queryURL,
-              method: "GET"
-            })
-              // After the data comes back from the API
-              .then(function(response) {
-                // Storing an array of results in the results variable
-                var results = response.data;
+  <div id="buttons-go-here">
+  </div>           
 
-              // Looping over every result item
-              for (var i = 0; i < results.length; i++) {
+  <div id="gifs-appear-here">
+  </div>
+      
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script type="text/javascript">
 
-                var animalImage = $("<img>");
+  var topics = ["dog", "cat", "mouse"];
 
-                animalImage.attr("src", results[i].images.fixed_height.url);
-                // animalImage.attr("alt", "dog image");
+   $( document ).ready(function(){
 
-                $("#gifs-appear-here").prepend(animalImage);
+    for (var i = 0; i < topics.length; i++){
+      var animalButton = $("<button>");
+      animalButton.attr("data-animal", topics[i]);
+      animalButton.attr("class", "buttons");
+      
+      animalButton.text(topics[i]);
+      $("#buttons-go-here").append(animalButton);       
+      console.log("working buttons");
+    }
 
-                
-                   
+   });
+
+    // Event listener for all button elements
+    $(document).on("click", ".buttons", function() {
+      console.log("working!");
+      // In this case, the "this" keyword refers to the button that was clicked
+      var animal = $(this).attr("data-animal");
       
-              // Only taking action if the photo has an appropriate rating
-              // if (results[i].rating !== "r" && results[i].rating !== "pg-13") {
-              // Creating a div with the class "item"
-              // var gifDiv = $("<div class='item'>");
+      // Constructing a URL to search Giphy for animal
+      var queryURL = "https://api.giphy.com/v1/gifs/search?q=" +
+      animal + "&api_key=dc6zaTOxFJmzC&limit=10";
+
+      console.log(queryURL)
       
-                //     // Storing the result item's rating
-                //     var rating = results[i].rating;
-      
-                //     // Creating a paragraph tag with the result item's rating
-                //     var p = $("<p>").text("Rating: " + rating);
-      
-                //     // Creating an image tag
-                //     var personImage = $("<img>");
-      
-                //     // Giving the image tag an src attribute of a proprty pulled off the
-                //     // result item
-                //     personImage.attr("src", results[i].images.fixed_height.url);
-      
-                //     // Appending the paragraph and personImage we created to the "gifDiv" div we created
-                //     gifDiv.append(p);
-                //     gifDiv.append(personImage);
-      
-                //     // Prepending the gifDiv to the "#gifs-appear-here" div in the HTML
-                //     $("#gifs-appear-here").prepend(gifDiv);
-                //   }
-                // }
-              }
-              });
-          });
-        </script>
+      // Performing our AJAX GET request
+      $.ajax({
+      url: queryURL,
+      method: "GET"
+      })
+      // After the data comes back from the API
+      .then(function(response) {
+        // Storing an array of results in the results variable
+        var results = response.data;
+        // Looping over every result item
+        for (var i = 0; i < results.length; i++) {
+          var animalImage = $("<img>");
+          // Return still image
+          animalImage.attr("src", results[i].images.fixed_height_still.url);
+          animalImage.attr("altSrc", results[i].images.fixed_height_still.url);
+
+          animalImage.attr("data-still", results[i].images.fixed_height_still.url);
+          animalImage.attr("data-animate", results[i].images.fixed_height.url);
+          animalImage.attr("data-status","still");
+          animalImage.attr("class","imgButton");
+
+          // animalImage.attr("alt", "dog image");
+          $("#gifs-appear-here").prepend(animalImage);             
+        }
+      });
+    });
+
+    $("#gifs-appear-here > img").on("click", function() {
+      console.log("clicking");
+      var imageSwitch = $(this).src;
+      $(this).attr("src",$(this).attr("altSrc"));   
+      $(this).attr("altSrc",imageSwitch);
+    });
+
+
+  $(document).on("click",".imgButton", function () {
+    // The attr jQuery method allows us to get or set the value of any attribute on our HTML element
+    var state = $(this).attr("data-status");
+    // If the clicked image's state is still, update its src attribute to what its data-animate value is.
+    // Then, set the image's data-state to animate
+    // Else set src to the data-still value
+    if (state === "still") {
+      $(this).attr("src", $(this).attr("data-animate"));
+      $(this).attr("data-status", "animate");
+    } else {
+      $(this).attr("src", $(this).attr("data-still"));
+      $(this).attr("data-status", "still");
+    }
+  });
+
+   
+  </script>
     
-      
-
-
-    
-
+       
 </body>
 </html>
